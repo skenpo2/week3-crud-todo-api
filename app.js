@@ -43,7 +43,7 @@ app.get('/todos/completed', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).json({ error: 'Server error!' });
+  res.status(500).json({ error: 'Server nah error!' });
 });
 
 const PORT = 3002;
