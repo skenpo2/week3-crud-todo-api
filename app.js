@@ -1,6 +1,11 @@
+require("dotenv").config()
+
 const express = require('express');
 const app = express();
+const cors = require("cors")
+
 app.use(express.json()); // Parse JSON bodies
+app.use(cors())
 
 let todos = [
   { id: 1, task: 'Learn Node.js', completed: false },
@@ -13,7 +18,12 @@ app.get('/todos', (req, res) => {
 });
 
 // POST New – Create
+//task two -- add task field validator
 app.post('/todos', (req, res) => {
+  const task = req.body.task;
+  if (!task || task === null) 
+    return res.status(404).json({message: "the task field is empty"}) 
+  //working
   const newTodo = { id: todos.length + 1, ...req.body }; // Auto-ID
   todos.push(newTodo);
   res.status(201).json(newTodo); // Echo back
@@ -42,9 +52,25 @@ app.get('/todos/completed', (req, res) => {
   res.json(completed); // Custom Read!
 });
 
+//bonus task
+//GET active todos
+app.get('/todos/active', (req, res) => {
+  const active = todos.filter((t) => !t.completed);
+  res.json(active); // working
+});
+
+//task one
+//GET a single todo - read
+app.get('/todos/:id', (req, res) => {
+  const todo = todos.find((t) => t.id === parseInt(req.params.id)); // Array.find()
+  if (!todo || todo === null) return res.status(404).json({ message: 'Todo not found' });
+  
+  res.status(200).json(todo);
+});
+
 app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server error!' });
 });
 
-const PORT = 3002;
+const PORT = process.env.PORT || 3005;
 app.listen(PORT, () => console.log(`Server on port ${PORT}`));
