@@ -12,6 +12,26 @@ app.get('/todos', (req, res) => {
   res.status(200).json(todos); // Send array as JSON
 });
 
+// To get single task by id
+app.get("/tasks/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+    const task = tasks.find(task => task.id === id);
+    if (!task) {
+        return res.status(404).json({message: "Task not found"});
+    }
+    res.json(task);
+});
+
+// Validate task field
+app.post('/tasks', validateTask, (req, res) => {
+  const { task } = req.body;
+  const newTask = { id: Date.now(), task, status: "pending" };
+
+  tasks.push(newTask);
+
+  res.status(201).json(newTask);
+});
+
 // POST New – Create
 app.post('/todos', (req, res) => {
   const newTodo = { id: todos.length + 1, ...req.body }; // Auto-ID
@@ -41,6 +61,12 @@ app.get('/todos/completed', (req, res) => {
   const completed = todos.filter((t) => t.completed);
   res.json(completed); // Custom Read!
 });
+
+// Getting all pending tasks
+app.get('/todos/active', activeTodo, (req, res) =>{
+  const active = status.filter(t => t.status !== "completed")
+  res.json(active)
+})
 
 app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Server error!' });
