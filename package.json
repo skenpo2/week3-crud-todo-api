@@ -11,9 +11,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "cors": "^2.8.6",
+    "express": "^5.1.0",
+    "helmet": "^8.3.0",
+    "joi": "^18.3.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.14"
   }
 }
